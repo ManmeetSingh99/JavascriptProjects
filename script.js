@@ -1,72 +1,49 @@
-const setOfWords = [
-  "My name is manmeet singh virdi and i am a student in Shri Shankaracharya College",
-  "Hope you all are safe in this pandemic coronavirus",
-  "If you want the source code the link ius given in the description so you can create your own version of this challenge",
-];
+const stars = document.querySelectorAll(".star");
+const output = document.querySelector(".output");
 
-const msg = document.getElementById("msg");
-const typedWords = document.getElementById("mywords");
-const btn = document.getElementById("btn");
-let startTime, endTime;
+for (let i = 0; i < stars.length; i++) {
+  stars[i].starValue = i + 1;
 
-const playgame = () => {
-  let randomNum = Math.floor(Math.random() * setOfWords.length);
-  msg.innerText = setOfWords[randomNum];
-  let date = new Date();
-  startTime = date.getTime();
-  btn.innerText = "Done";
-};
+  ["click", "mouseover", "mouseout"].forEach(function (e) {
+    stars[i].addEventListener(e, showRating);
+  });
+}
+function showRating(e) {
+  let type = e.type;
+  var starValue = this.starValue;
 
-const endPlay = () => {
-  let date = new Date();
-  endTime = date.getTime();
-  let totalTime = (endTime - startTime) / 1000;
-  console.log(Math.trunc(totalTime));
+  if (type === "click") {
+    if (starValue == 1) {
+      output.innerHTML = `You Rated This ${starValue} star.`;
+    }
+    if (starValue > 1) {
+      output.innerHTML = `You Rated This ${starValue} stars.`;
+    }
+  }
 
-  let totalstr = typedWords.value;
-  let wordCount = wordCounter(totalstr);
+  stars.forEach(function (element, index) {
+    if (type === "click") {
+      if (index < starValue) {
+        element.classList.add("orange");
+      } else {
+        element.classList.remove("orange");
+      }
+    }
 
-  //words written per seconds
-  let speed = Math.round((wordCount / totalTime) * 60);
+    if (type === "mouseover") {
+      if (index < starValue) {
+        element.classList.add("yellow");
+      } else {
+        element.classList.remove("yellow");
+      }
+    }
 
-  let finalMsg = `You typed total ${wordCount} words at ${speed} per minute `;
-  console.log(finalMsg);
-
-  finalMsg = finalMsg + compareWords(msg.innerText, totalstr);
-
-  msg.innerText = finalMsg;
-};
-
-const compareWords = (str1, str2) => {
-  let words1 = str1.split(" ");
-  let words2 = str2.split(" ");
-  let count = 0;
-
-  words1.forEach((item, index) => {
-    if (item == words2[index]) {
-      count++;
+    if (type === "mouseout") {
+      element.classList.remove("yellow");
     }
   });
+}
 
-  let errorWords = words1.length - count;
-  return ` 
-          ${count} words are correct out of ${words1.length} words And total number of error words are ${errorWords}
-          `;
-};
-
-const wordCounter = (str) => {
-  let words = str.split(" ").length;
-  return words;
-};
-
-btn.addEventListener("click", function () {
-  console.log(this);
-  if (this.innerText == "Start") {
-    typedWords.disabled = false;
-    playgame();
-  } else if (this.innerText == "Done") {
-    typedWords.disabled = true;
-    this.innerText = "Start";
-    endPlay();
-  }
-});
+function nextPage() {
+  window.location.reload(); //calling this to just reload the page
+}
